@@ -1,0 +1,73 @@
+#include <iostream>
+#include <stdio.h>
+
+using	namespace std;
+
+#define N 100000
+
+struct Node
+{
+	char data;
+	struct Node *next;
+};
+
+
+void Print(Node *head)
+{
+	//we don't need to print dummy data.	
+	head = head->next;
+	while (head != NULL)
+	{
+		cout << head->data;
+		head = head->next;
+	}
+	cout << endl;
+}
+
+
+void freeAll(struct Node *head){
+	struct Node *current = head;
+	while ((current = head) != NULL) {
+		head = head->next;          
+		free(current);    
+	}
+}
+
+int main(){
+	//freopen("MyOut.txt", "w", stdout);
+	//freopen("In.txt", "r", stdin);
+	char input[N];
+	while (gets(input)) {
+		struct Node *head = (struct Node*) malloc(sizeof(struct Node));
+		head->data = '0';
+		head->next = NULL;
+		struct Node *tail = head;
+		struct Node *current = head;
+		for (int i = 0; input[i]; i++)
+		{
+			//home key pressed
+			if (input[i] == '['){
+				current = head;
+			}
+			//end key pressed
+			else if (input[i] == ']'){
+				current = tail;
+			}
+			else {
+				struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));
+				newNode->data = input[i];
+				struct Node *next = current->next;
+				current->next = newNode;
+				newNode->next = next;
+				current = newNode;
+				if (newNode->next == NULL)
+				{
+					tail = newNode;
+				}
+			}
+		}
+		Print(head);
+		freeAll(head);
+	}
+	return 0;
+}
