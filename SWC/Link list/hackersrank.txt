@@ -1,0 +1,321 @@
+#include "stdio.h"
+#include <iostream>
+#include <list>
+
+using	namespace std;
+
+
+/*
+
+struct Node
+{
+int data;
+struct Node *next;
+struct Node *prev;
+};
+
+void Print(Node *head)
+{
+	// This is a "method-only" submission. 
+	// You only need to complete this method.	
+	while (head != NULL)
+	{
+		cout << head->data << endl;
+		head = head->next;
+	}
+}
+Node* Insert(Node *head, int data)
+{
+	// Complete this method
+	struct Node *newNode =(struct Node*) malloc(sizeof(struct Node));
+	newNode->data = data;
+	newNode->next = NULL;
+	if (head == NULL)
+	{
+		head = newNode;
+		return head;
+	}
+	struct Node *current = head;
+	while (current->next != NULL)
+	{
+		current = current->next;
+	}
+	current->next = newNode;
+	return head;
+}
+Node* insert_begin(Node *head, int data){
+	struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));
+	newNode->data = data;
+	newNode->next = head;
+	return newNode;
+}
+
+Node* InsertNth(Node *head, int data, int position){
+	struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));
+	newNode->data = data;
+	if (position == 0 || head == NULL)
+	{
+		newNode->next = head;
+		return newNode;
+	}
+	struct Node *current = head;
+	struct Node *prev = NULL;
+	int counter = 0;
+	while (current != NULL)
+	{
+		if (counter == position)
+		{
+			prev->next = newNode;
+			newNode->next = current;
+			return head;
+		}
+		prev = current;
+		current = current->next;
+		counter++;
+		
+	}
+	return head;
+}
+Node* Delete(Node *head, int position){
+	
+	struct Node *current = head;
+	struct Node *prev = NULL;
+	int counter = 0;
+	if (position == 0 && head != NULL)
+	{
+		current = head->next;
+		free(head);
+		return current;
+
+	}
+	while (current != NULL)
+	{
+		if (counter == position){
+			prev->next = current->next;
+			free(current);
+			return head;
+		}
+		prev = current;
+		current = current->next;
+		counter++;
+	}
+	return head;
+}
+
+int compareList(Node *headA, Node *headB)
+{
+	
+	while (headA != NULL || headB != NULL)
+	{
+		if ((headA == NULL && headB != NULL) || (headB == NULL && headA != NULL))
+		{
+			return 0;
+		}
+		if (headA->data != headB->data)
+		{
+			return 0;
+		}
+		headA = headA->next;
+		headB = headB->next;
+	}
+	return 1;
+}
+//using (n1 + n2) loop...
+//every node traverse only once
+
+Node* MergeLists(Node *headA, Node* headB)
+{
+	// This is a "method-only" submission. 
+	// You only need to complete this method 
+
+	//boundary condition..
+	if (headA == NULL)
+	{
+		return headB;
+	}
+	if (headB == NULL)
+	{
+		return headA;
+	}
+
+	struct Node *currentA = headA;
+	struct Node *currentB = headB;
+	struct Node *newListHead = NULL;
+	struct Node *newListTail = NULL;
+	
+	while (currentB != NULL && currentA != NULL)
+	{
+		if (currentA->data <= currentB->data)
+		{
+			while (currentA != NULL && currentA->data <= currentB->data)
+			{
+
+				if (newListHead == NULL)
+				{
+					newListHead = currentA;
+
+				}
+
+				else
+				{
+					newListTail->next = currentA;
+				}
+				newListTail = currentA;
+				currentA = currentA->next;
+			}
+		}
+		else
+		{
+			if (newListHead == NULL)
+			{
+				newListHead = currentB;
+			}
+			else
+			{
+				newListTail->next = currentB;
+			}
+			newListTail = currentB;
+			currentB = currentB->next;
+		}
+		
+	}
+	if (currentA != NULL)
+	{
+		newListTail->next = currentA;
+	}
+	if (currentA == NULL)
+	{
+		newListTail->next = currentB;
+	}
+	return newListHead;
+}
+
+int GetNode(Node *head, int positionFromTail)
+{
+	// This is a "method-only" submission. 
+	// You only need to complete this method.
+	struct Node *current = head;
+	struct Node *desiredNode = head;
+	int counter = 0;
+	while (current != NULL)
+	{
+		if (counter > positionFromTail)
+		{
+			desiredNode = desiredNode->next;
+		}
+		counter++;
+		current = current->next;
+	}
+	return desiredNode->data;
+}
+
+Node* RemoveDuplicates(Node *head)
+{
+	// This is a "method-only" submission. 
+	// You only need to complete this method. 
+	struct Node *current = head;
+	struct Node *nextnext = NULL;
+	while (current != NULL && current->next != NULL)
+	{
+		if (current->data == current->next->data)
+		{
+			nextnext = current->next->next;
+			free(current->next);
+			current->next = nextnext;
+		}
+		else {
+			current = current->next;
+		}
+	}
+	return head;
+}
+
+void changeFirstValue(struct Node **head){
+	struct  Node *newHead  = (struct Node*) malloc(sizeof(struct Node));
+	newHead->data = 19;
+	newHead->next = NULL;
+	*head = newHead;
+}
+bool has_cycle(Node *head){
+	struct Node *Slow = head;
+	struct Node  *fast = head;
+	while (Slow != NULL && fast->next != NULL )
+	{
+		Slow = Slow->next;
+		fast = fast->next->next;
+		if (Slow == fast)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Node* SortedInsert(Node *head, int data)
+{
+	// Complete this function
+	// Do not write the main method. 
+	struct Node *newNode = (struct Node*) malloc(sizeof(struct Node));
+	newNode->data = data;
+	newNode->next = NULL;
+	if (head == NULL)
+	{
+		return newNode;
+	}
+	struct Node *prev = NULL;
+	struct Node *current = head;
+	struct Node *next = head->next;
+
+	while (current != NULL)
+	{
+		
+		if (newNode->data >= current->data && next != NULL && newNode->data < next->data)
+		{
+			current->next = newNode;
+			newNode->next = next;
+			break;
+		}
+		if (next == NULL && newNode->data >= current->data)
+		{
+			current->next = newNode;
+			break;
+		}
+		if (next == NULL && newNode->data < current->data)
+		{
+			if (prev == NULL)
+			{
+				head = newNode;
+			}
+			else {
+				prev->next = newNode;
+			}
+			newNode->next = current;
+			break;
+		}
+		prev = current;
+		current = next;
+		next = next->next;
+		
+	}
+	
+	return head;
+}
+#define N 100000
+void main(){
+	char input[N];
+	while (gets(input)) {
+		
+	}
+
+	struct Node *head = NULL;
+	head = SortedInsert(head, 2);
+	head = SortedInsert(head, 1);
+	head = SortedInsert(head, 4);
+	head = SortedInsert(head, 3);
+	head = SortedInsert(head, 30);
+	head = SortedInsert(head, 100);
+	Print(head);
+	printf("hello world");
+}
+*/
