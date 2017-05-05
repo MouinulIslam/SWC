@@ -1,0 +1,89 @@
+
+#include <iostream>
+
+using namespace std;
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+void Insert(Node *&head,int data)
+{
+    // Complete this method
+    struct Node *newNode =(struct Node*) malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    if (head == NULL)
+    {
+        head = newNode;
+        return;
+    }
+    struct Node *current = head;
+    while (current->next != NULL)
+    {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+
+int main() {
+    int numberOfTask, numberOfRelations;
+    while (cin>>numberOfTask>>numberOfRelations) {
+        //boundary condation.
+        if (numberOfRelations == 0 && numberOfTask == 0) {
+            break;
+        }
+        
+        int *inWardCounter = (int*)malloc(sizeof(int) * (numberOfTask + 1));
+        struct Node **outWardList = (struct Node **)malloc(sizeof(struct Node) * (numberOfTask + 1));
+        //Initialize
+        for (int i = 1; i <= numberOfTask; i++) {
+            inWardCounter[i] = 0;
+            outWardList[i] = NULL;
+        }
+        //input relations.
+        for (int i = 1; i <= numberOfRelations; i++) {
+            int prev, next;
+            cin>>prev>>next;
+            inWardCounter[next]++;
+            Insert(outWardList[prev], next);
+        }
+        //check inward counter.
+        char space = '\0';
+        int shouldOut = 0;
+        while (shouldOut == 0) {
+            shouldOut = 1;
+            struct Node *zeroCounter = NULL;
+            for (int i = 1; i <= numberOfTask; i++) {
+                if (inWardCounter[i] > 0) {
+                    shouldOut = 0;
+                }
+                if (inWardCounter[i] == 0) {
+                    cout<<space<<i;
+                    space = ' ';
+                    //make zeroCounter list
+                    inWardCounter[i]--;
+                    Insert(zeroCounter, i);
+                }
+            }
+            while (zeroCounter != NULL) {
+                struct Node *outNode = outWardList[zeroCounter->data];
+                while (outNode != NULL) {
+                    inWardCounter[outNode->data]--;
+                    outNode = outNode->next;
+                }
+                struct Node *temp = zeroCounter;
+                zeroCounter = zeroCounter->next;
+                free(temp);
+            }
+        }
+        
+        cout<<endl;
+        //free memory
+        free(inWardCounter);
+        for (int i = 0; i <= numberOfTask; i++) {
+            free(outWardList[i]);
+        }
+    }
+    return 0;
+}
