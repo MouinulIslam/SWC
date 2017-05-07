@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -7,18 +8,18 @@ struct Node {
     int data;
     struct Node *next;
 };
-void Insert(Node *&head,int data)
+void Insert(Node **head,int data)
 {
     // Complete this method
     struct Node *newNode =(struct Node*) malloc(sizeof(struct Node));
     newNode->data = data;
     newNode->next = NULL;
-    if (head == NULL)
+    if (*head == NULL)
     {
-        head = newNode;
+        *head = newNode;
         return;
     }
-    struct Node *current = head;
+    struct Node *current = *head;
     while (current->next != NULL)
     {
         current = current->next;
@@ -31,7 +32,7 @@ int main() {
     while (cin>>numberOfTask>>numberOfRelations) {
         //boundary condation.
         if (numberOfRelations == 0 && numberOfTask == 0) {
-            break;
+            return 0;
         }
         
         int *inWardCounter = (int*)malloc(sizeof(int) * (numberOfTask + 1));
@@ -46,10 +47,10 @@ int main() {
             int prev, next;
             cin>>prev>>next;
             inWardCounter[next]++;
-            Insert(outWardList[prev], next);
+            Insert(&outWardList[prev], next);
         }
         //check inward counter.
-        char space = '\0';
+        int shouldSpace = 0;
         int shouldOut = 0;
         while (shouldOut == 0) {
             shouldOut = 1;
@@ -59,11 +60,14 @@ int main() {
                     shouldOut = 0;
                 }
                 if (inWardCounter[i] == 0) {
-                    cout<<space<<i;
-                    space = ' ';
+                    if (shouldSpace == 1) {
+                        cout<<' ';
+                    }
+                    cout<<i;
+                    shouldSpace = 1;
                     //make zeroCounter list
                     inWardCounter[i]--;
-                    Insert(zeroCounter, i);
+                    Insert(&zeroCounter, i);
                 }
             }
             while (zeroCounter != NULL) {
@@ -81,7 +85,7 @@ int main() {
         cout<<endl;
         //free memory
         free(inWardCounter);
-        for (int i = 0; i <= numberOfTask; i++) {
+        for (int i = 1; i <= numberOfTask; i++) {
             free(outWardList[i]);
         }
     }
