@@ -1,0 +1,66 @@
+void ReversePrint(struct Node *head)
+{
+    // This is a "method-only" submission.
+    // You only need to complete this method.
+    if (head == NULL) {
+        return;
+    }
+    ReversePrint(head->next);
+    cout<< head->data<<endl;
+}
+Node* Reverse(struct Node *head)
+{
+    struct Node *prev = NULL;
+    struct Node *current = head;
+    struct Node *next = head->next;
+    
+    while (current != NULL) {
+        next = current -> next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    return prev;
+}
+int FindMergeNode(Node *headA, Node *headB)
+{
+    // Complete this function
+    // Do not write the main method.
+    struct Node *currentA = headA;
+    struct Node *currentB = headB;
+    int countA = 0;
+    int countB = 0;
+    while (currentA != NULL || currentB != NULL) {
+        if (currentB != NULL) {
+            currentB = currentB->next;
+            countB++;
+        }
+        if (currentA != NULL) {
+            currentA = currentA -> next;
+            countA++;
+        }
+    }
+    int diff = 0;
+    if (countA > countB) {
+        currentA = headA;
+        currentB = headB;
+        diff = countA - countB;
+    } else{
+        currentA = headB;
+        currentB = headA;
+        diff = countB - countA;
+    }
+    int counter = 0;
+    while (currentA != NULL) {
+        if (counter >= diff) {
+            if (currentA == currentB) {
+                return currentA->data;
+            }
+            currentB = currentB->next;
+        }
+        currentA = currentA->next;
+        counter++;
+    }
+    return 0;
+}
+
