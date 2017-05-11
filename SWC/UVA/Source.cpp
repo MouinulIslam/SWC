@@ -9,32 +9,36 @@ bool shouldPrintSpace = false;
 bool visited[N];
 
 void DFS(int start){
-	
-	for (int i = 0; i <= numberOfTask; i++)
+
+	for (int i = 1; i <= numberOfTask; i++)
 	{
 		if (relationArray[start][i] && visited[start] == false)
 		{
-			visited[start] = true;
+
 			DFS(i);
 
 		}
 	}
-	if (shouldPrintSpace)
+
+	if (visited[start] == false)
 	{
-		cout << ' ';
+		if (shouldPrintSpace)
+		{
+			cout << ' ';
+		}
+		shouldPrintSpace = true;
+
+		cout << start;
+		visited[start] = true;
 	}
-	shouldPrintSpace = true;
-	
-	cout << start;
-	
 }
 
 void clearAll(){
-	bool shouldPrintSpace = false;
-	for (int i = 0; i < N; i++)
+    shouldPrintSpace = false;
+	for (int i = 1; i <= numberOfTask; i++)
 	{
 		visited[i] = false;
-		for (int j = 0; j < N; j++)
+		for (int j = 1; j <= numberOfTask; j++)
 		{
 			relationArray[i][j] = false;
 		}
@@ -46,24 +50,25 @@ void takeInput(){
 	{
 		int before, after;
 		cin >> before>> after;
-		relationArray[before][after] = true;
+		relationArray[after][before] = true;
 	}
 }
 
 int main(){
-	
+
 	while (cin>> numberOfTask>>numberOfRelations)
 	{
 		if (numberOfTask == 0 && numberOfRelations == 0)
 		{
 			break;
 		}
-		clearAll();
+
 		takeInput();
 		for (int i = 1; i <= numberOfTask; i++)
 		{
 			DFS(i);
 		}
 		cout << endl;
+		clearAll();
 	}
 }
